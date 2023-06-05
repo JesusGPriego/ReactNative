@@ -1,15 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
+import { Provider } from 'react-redux';
 import CategoriesScreen from './src/screens/CategoriesScreen';
 import MealsOverviewScreen from './src/screens/MealsOverviewScreen';
 import MealDetailsScreen from './src/screens/MealDetailsScreen';
 import FavoriteScreen from './src/screens/FavoriteScreen';
-import FavoriteContextProvider from './src/store/context/favorites-context';
-
+import { store } from './src/store/redux/store';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -63,7 +63,9 @@ export default function App ()
   return (
     <>
       <StatusBar style='light' />
-      <FavoriteContextProvider>
+      <Provider
+        store={ store }
+      >
         <NavigationContainer
           initialRouteName="MealsCategories"
         >
@@ -94,7 +96,7 @@ export default function App ()
             />
           </Stack.Navigator>
         </NavigationContainer>
-      </FavoriteContextProvider>
+      </Provider>
     </>
   );
 }

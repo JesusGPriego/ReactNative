@@ -1,28 +1,25 @@
-import { useLayoutEffect, useContext } from 'react';
+import { useLayoutEffect } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import MealDetail from '../components/MealDetails';
 import Subtitle from '../components/MealDetail/Subtitle';
 import List from '../components/MealDetail/List';
 import HeaderButton from '../components/HeaderButton';
-import { FavoriteContext } from '../store/context/favorites-context';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { addFavorite, removeFavorite } from '../store/redux/favorites';
 const MealDetailsScreen = ( { navigation, route } ) =>
 {
-
-    const favoritemealContext = useContext( FavoriteContext );
+    const dispatch = useDispatch();
+    const favoriteMealIds = useSelector( ( state ) => state.favoriteMeals.ids
+    );
     const { item } = route.params;
 
-
-    const mealIsFavorite = favoritemealContext.ids.includes( item.id );
-    ( 'mealIsFavorite ->', mealIsFavorite );
-    ( 'favoritemealContext.ids->', favoritemealContext.ids );
+    const mealIsFavorite = favoriteMealIds.includes( item.id );
 
     const toggleFavorite = () =>
     {
-        ( 'item.id ->', item.id );
         mealIsFavorite
-            ? favoritemealContext.removeFavorite( item.id )
-            : favoritemealContext.addFavorite( item.id );
+            ? dispatch( removeFavorite( { id: item.id } ) )
+            : dispatch( addFavorite( { id: item.id } ) );
     };
 
     useLayoutEffect( () =>
@@ -39,7 +36,7 @@ const MealDetailsScreen = ( { navigation, route } ) =>
                 );
             }
         } );
-    }, [ favoritemealContext.ids ] );
+    }, [ mealIsFavorite ] );
     return (
         <ScrollView style={ { marginBottom: 32, } }>
             <Image style={ styles.image } source={ { uri: item.imageUrl } } />
