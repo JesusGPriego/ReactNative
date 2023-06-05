@@ -1,5 +1,5 @@
 import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
-import MealDetail from './MealDetails';
+import MealDetail from '../MealDetails';
 
 const MealItem = ( { title, imageUrl, duration, complexity, affordability, onPress } ) =>
 {
