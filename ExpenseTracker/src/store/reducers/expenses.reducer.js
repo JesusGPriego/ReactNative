@@ -1,19 +1,51 @@
 import { createSlice } from '@reduxjs/toolkit';
-
+import dummyExpenses from "../../utils/data/dummy-expenses";
+import { getFormattedDate } from '../../utils/date';
 
 const expenseReducer = createSlice( {
     name: 'expenses',
     initialState: {
-        expenses: [],
+        expenses: dummyExpenses,
     },
     reducers: {
         addExpenses: ( state, action ) =>
         {
-            state.ids.push( action.payload.id );
+            // console.log( 'adding new expense \n' );
+            // console.log( state, '\n' );
+            // console.log( action, '\n' );
+            // console.log( '----------------------', '\n' );
+            const { description, amount, date } = action.payload;
+            const newExpense = {
+                id: new Date().toString() + Math.random().toString(),
+                description,
+                amount,
+                date: getFormattedDate( date )
+            };
+            state.expenses.push( newExpense );
+        },
+        updateExpense: ( state, action ) =>
+        {
+            state.expenses = state.expenses.reduce( ( sum, current ) =>
+                current.id !== action.payload.id
+                    ? [ ...sum, current ]
+                    : [ ...sum, { ...current, ...action.payload.data } ]
+                , [] );
         },
         removeExpenses: ( state, action ) =>
         {
-            state.ids.splice( state.ids.indexOf( action.payload.id ), 1 );
+            const newExpenses = state.expenses.reduce( ( sum, current ) =>
+            {
+                if ( current.id !== action.payload.id )
+                {
+                    return current.id !== action.payload.id && [ ...sum, {
+                        ...current,
+                        date: getFormattedDate( current.date )
+                    } ];
+                }
+                return [ ...sum ];
+            }, [] );
+
+            state.expenses = newExpenses;
         }
     }
 } );

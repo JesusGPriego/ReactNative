@@ -1,39 +1,19 @@
-import { useState, } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
-import ListHeader from '../components/List/ListHeader';
-import ListItem from "../components/List/ListItem";
-import List from "../components/List/List";
-import dummyExpenses from "../utils/dummy-expenses";
-const AllExpensesScreen = ( { navigation } ) =>
+import Output from "../components/Output";
+import { useSelector } from 'react-redux';
+const AllExpensesScreen = () =>
 {
 
-    const [ value, setValue ] = useState();
+    const expenses = useSelector( ( state ) => state.expenses.expenses );
 
-    const goNextScreen = () =>
-    {
-        navigation.navigate( 'ModifyExpenses' );
-    };
+
+    const period = 'Total';
 
     return (
-        <View style={ styles.container }>
-            <ListHeader />
-            <List
-                data={ dummyExpenses }
-            />
-        </View>
+        <Output
+            expenses={ expenses }
+            period={ period }
+        />
     );
 };
 
 export default AllExpensesScreen;
-
-const styles = StyleSheet.create( {
-    container: {
-        flex: 1,
-        // justifyContent: 'center',
-        // alignItems: 'center',
-    },
-    text: {
-        color: 'black',
-        fontWeight: 'bold'
-    },
-} );

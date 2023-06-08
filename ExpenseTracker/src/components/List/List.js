@@ -1,6 +1,7 @@
 import { useState, } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import ListItem from "./ListItem";
+import ListEmpty from "./ListEmpty";
 
 const List = ( { data } ) =>
 {
@@ -8,13 +9,11 @@ const List = ( { data } ) =>
     const renderItem = ( { item } ) =>
     {
         return (
-            <ListItem />
+            <ListItem
+                { ...item }
+            />
         );
     };
-
-
-
-    const [ value, setValue ] = useState();
 
     return (
         <FlatList
@@ -23,6 +22,7 @@ const List = ( { data } ) =>
                 item.id
             }
             renderItem={ renderItem }
+            ListEmptyComponent={ ListEmpty }
         />
     );
 };

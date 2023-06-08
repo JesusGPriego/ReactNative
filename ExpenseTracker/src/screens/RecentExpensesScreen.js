@@ -1,17 +1,25 @@
-import { useState, } from "react";
-import { View, Text, StyleSheet } from "react-native";
-
+import { StyleSheet } from "react-native";
+import Output from "../components/Output";
+import { useSelector } from 'react-redux';
+import { getDateMinusDays } from "../utils/date";
 const RecentExpensesScreen = () =>
 {
 
-    const [ value, setValue ] = useState();
+    const expenses = useSelector( ( state ) => state.expenses.expenses );
+
+    const recentExpenses = expenses.filter( ( expense ) =>
+    {
+        const expenseDate = new Date( expense.date );
+        const today = new Date();
+        const date7DaysAgo = getDateMinusDays( today, 7 );
+        return expenseDate > date7DaysAgo;
+    } );
 
     return (
-        <View style={ styles.container }>
-            <Text style={ styles.text }>
-                RecentExpensesScreen
-            </Text>
-        </View>
+        <Output
+            expenses={ recentExpenses }
+            period='last 7 days'
+        />
     );
 };
 
