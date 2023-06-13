@@ -22,6 +22,7 @@ export default Button;
 
 const styles = StyleSheet.create( {
     button: {
+        minWidth: 90,
         borderRadius: 4,
         padding: 8,
         backgroundColor: colors.darkerText

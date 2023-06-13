@@ -7,5 +7,6 @@ export default colors = {
     black: '#1c1c18',
     grey: '#848484',
     white: 'white',
-    error: '#bc1919'
+    error: '#bc1919',
+    erroLight: '#ffaaaa',
 };

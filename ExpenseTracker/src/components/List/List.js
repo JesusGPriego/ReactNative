@@ -1,4 +1,3 @@
-import { useState, } from "react";
 import { FlatList, StyleSheet } from "react-native";
 import ListItem from "./ListItem";
 import ListEmpty from "./ListEmpty";
