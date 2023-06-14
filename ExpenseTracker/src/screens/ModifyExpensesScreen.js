@@ -1,13 +1,18 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import { View, StyleSheet, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { addExpenses, removeExpenses, updateExpense } from "../store/reducers/expenses.reducer";
 import { useDispatch, useSelector } from "react-redux";
+import { storeExpense, updateExpense as updateInBack, deleteExpense } from "../utils/http";
+import LoadingOverlay from "../components/UI/LoadingOverlay";
+import ErrorOverlay from "../components/UI/ErrorOverlay";
 import IconButton from "../components/UI/IconButton";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 import colors from "../utils/constants/colors";
 
 const ModifyExpensesScreen = ( { route, navigation } ) =>
 {
+    const [ isFetching, setIsFetching ] = useState( false );
+    const [ errorMessage, setErrorMessage ] = useState();
     const expenses = useSelector( ( state ) => state.expenses.expenses );
     const expenseId = route.params?.expenseId;
     const selectedExpense = expenses.find( ( expense ) => expense.id === expenseId );
@@ -24,24 +29,55 @@ const ModifyExpensesScreen = ( { route, navigation } ) =>
 
     const deleteExpenseHandler = () =>
     {
-        dispatch( removeExpenses( { id: expenseId } ) );
-        closeModal();
+        try
+        {
+            deleteExpense( expenseId );
+            dispatch( removeExpenses( { id: expenseId } ) );
+            closeModal();
+
+        } catch ( error )
+        {
+            setErrorMessage( 'Could not delete expense.' );
+        }
     };
 
     const cancelHandler = () => closeModal();
-    const confirmHandler = ( expenseData ) =>
+    const confirmHandler = async ( expenseData ) =>
     {
+        setIsFetching( true );
         if ( !isEditing )
         {
-            dispatch( addExpenses( expenseData ) );
+            try
+            {
+                const id = await storeExpense( expenseData );
+                dispatch( addExpenses( { ...expenseData, id } ) );
+                setTimeout( () =>
+                {
+                    closeModal();
+                }, 700 );
+            } catch ( error )
+            {
+                setErrorMessage( 'Could not add new expense.' );
+            }
         } else
         {
-            dispatch( updateExpense( {
-                id: expenseId,
-                data: expenseData,
-            } ) );
+            try
+            {
+                updateInBack( expenseId, expenseData );
+                dispatch( updateExpense( {
+                    id: expenseId,
+                    data: expenseData,
+                } ) );
+                setTimeout( () =>
+                {
+                    closeModal();
+
+                }, 700 );
+            } catch ( error )
+            {
+                setErrorMessage( 'Could not update expense' );
+            }
         }
-        closeModal();
     };
 
 
@@ -52,6 +88,16 @@ const ModifyExpensesScreen = ( { route, navigation } ) =>
         } );
     }, [ navigation, isEditing ] );
 
+
+    if ( errorMessage && !isFetching )
+    {
+        return <ErrorOverlay message={ errorMessage } onConfirm={ closeModal } />;
+    }
+
+    if ( isFetching )
+    {
+        return <LoadingOverlay />;
+    }
 
     return (
         <TouchableWithoutFeedback onPress={ Keyboard.dismiss } accessible={ false }>

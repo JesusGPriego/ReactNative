@@ -1,18 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
-import dummyExpenses from "../../utils/data/dummy-expenses";
 import { getFormattedDate } from '../../utils/date';
 
 const expenseReducer = createSlice( {
     name: 'expenses',
     initialState: {
-        expenses: dummyExpenses,
+        expenses: [],
     },
     reducers: {
         addExpenses: ( state, action ) =>
         {
             const newExpense = {
                 ...action.payload,
-                id: new Date().toString() + Math.random().toString(),
             };
             state.expenses.unshift( newExpense );
         },
@@ -27,7 +25,6 @@ const expenseReducer = createSlice( {
         },
         removeExpenses: ( state, action ) =>
         {
-            console.log( 'triggering removeExpense' );
 
             const newExpenses = state.expenses.reduce( ( sum, current ) =>
             {
@@ -42,6 +39,10 @@ const expenseReducer = createSlice( {
             }, [] );
 
             state.expenses = newExpenses;
+        },
+        setExpenses: ( state, action ) =>
+        {
+            state.expenses = action.payload.reverse();
         }
     }
 } );
@@ -49,4 +50,5 @@ const expenseReducer = createSlice( {
 export const addExpenses = expenseReducer.actions.addExpenses;
 export const removeExpenses = expenseReducer.actions.removeExpenses;
 export const updateExpense = expenseReducer.actions.updateExpense;
+export const setExpenses = expenseReducer.actions.setExpenses;
 export default expenseReducer.reducer;

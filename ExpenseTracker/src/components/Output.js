@@ -6,7 +6,6 @@ const Output = ( { expenses, period } ) =>
 {
 
     const total = expenses.reduce( ( prev, current ) => prev + current.amount, 0 ).toFixed( 2 );
-
     return (
         <View style={ styles.container }>
             <ListHeader
