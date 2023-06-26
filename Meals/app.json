@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Meals",
+    "name": "My Recipe Book",
     "slug": "Meals",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,18 +12,28 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "versionCode": 1,
+      "package": "com.suleware.Meals"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3d27f2f7-d49f-4354-84d5-b4a7309d1ba2"
+      }
     }
   }
 }
